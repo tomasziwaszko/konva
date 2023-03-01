@@ -565,10 +565,10 @@ export class Stage extends Container<Layer> {
 
       // TODO: test in iframe
       // only call preventDefault if the shape is listening for events
-      const isTouch = evt.type.indexOf('touch') >= 0;
-      if (shape.preventDefault() && evt.cancelable && isTouch) {
-        evt.preventDefault();
-      }
+      // const isTouch = evt.type.indexOf('touch') >= 0;
+      // if (shape.preventDefault() && evt.cancelable && isTouch) {
+      //   evt.preventDefault();
+      // }
     });
 
     // trigger down on stage if not already
@@ -581,13 +581,13 @@ export class Stage extends Container<Layer> {
       });
     }
   }
-  _pointermove(evt: TouchEvent | MouseEvent | PointerEvent) {
+  _pointermove(evt) {
     const events = getEventsMap(evt.type);
     const eventType = getEventType(evt.type);
     if (!events) {
       return;
     }
-    if (DD.isDragging && DD.node.preventDefault() && evt.cancelable) {
+    if (evt.touches && evt.touches.length === 1) {
       evt.preventDefault();
     }
     this.setPointersPositions(evt);
@@ -747,7 +747,7 @@ export class Stage extends Container<Layer> {
     // TODO: are we sure we need to prevent default at all?
     // do not call this function on mobile because it prevent "click" event on all parent containers
     // but apps may listen to it.
-    if (evt.cancelable && eventType !== 'touch') {
+    if (evt.cancelable && evt.touches &&  evt.touches.length === 1) {
       evt.preventDefault();
     }
   }
